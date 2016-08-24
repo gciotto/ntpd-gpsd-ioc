@@ -184,6 +184,8 @@ class NTPDriver(Driver):
                     _l = _output.split('\n')
                     _lines = [filter (lambda a: a != '', _l[n].split(" ")) for n in range (len(_l))]
                     
+                    _used_line = None
+                    
                     # Discard two first header rows and last empty row
                     for l in _lines[2:-1]:
                                                 
@@ -191,8 +193,9 @@ class NTPDriver(Driver):
                             _used_line = l 
                             break
                         
-                    _offset = float (_used_line[-2])
-                    self.setParam("NTP:Offset", _offset)
+                    if _used_line != None:
+                        _offset = float (_used_line[-2])
+                        self.setParam("NTP:Offset", _offset)
                     
                 
                 for key in _pvs:
