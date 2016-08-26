@@ -26,15 +26,19 @@
       <scriptName>EmbeddedScript</scriptName>
       <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
 
-a = PVUtil.getDoubleArray(pvs[0])
-_str = ""
+try:
+	a = PVUtil.getDoubleArray(pvs[0])
+	_str = ""
 
-for i in a:
-	if  i != 0:
-		_str = _str + str(int(i)) + " " 
+	for i in a:
+		if  i != 0:
+			_str = _str + str(int(i)) + " " 
 
-pvs[1].setValue(_str)
+	pvs[1].setValue(_str)
 
+except Exception:
+
+	print "[GPS-NTP] Script 1 failed..."
 ]]></scriptText>
       <pv trig="true">ca://Cnt:$(receiver_id):GPS:Satellites</pv>
       <pv trig="false">loc://satellites</pv>
@@ -43,18 +47,25 @@ pvs[1].setValue(_str)
       <scriptName>EmbeddedScript</scriptName>
       <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
 
-_latitude = PVUtil.getDouble(pvs[0])
-_hemisphere = "N"
+try:
 
-if (_latitude < 0):
-	_hemisphere = "S"
+	_latitude = PVUtil.getDouble(pvs[0])
+	_hemisphere = "N"
 
-_degree = int(_latitude)
-_minutes_f = (_degree - _latitude) * 60
-_minutes = int (_minutes_f)
-_seconds = (_minutes_f - _minutes)*60
+	if (_latitude < 0):
+		_hemisphere = "S"
 
-pvs[1].setValue("%io %i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hemisphere))]]></scriptText>
+	_degree = int(_latitude)
+	_minutes_f = (_degree - _latitude) * 60
+	_minutes = int (_minutes_f)
+	_seconds = (_minutes_f - _minutes)*60
+
+	pvs[1].setValue("%io %i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hemisphere))
+
+
+except Exception:
+
+	print "[GPS-NTP] Script 2 failed..."]]></scriptText>
       <pv trig="true">ca://Cnt:$(receiver_id):GPS:Latitude</pv>
       <pv trig="false">loc://latitude</pv>
     </path>
@@ -62,20 +73,24 @@ pvs[1].setValue("%io %i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hemi
       <scriptName>EmbeddedScript</scriptName>
       <scriptText><![CDATA[from org.csstudio.opibuilder.scriptUtil import PVUtil
 
-_longitude = PVUtil.getDouble(pvs[0])
-_hemisphere = "L"
+try:
+	_longitude = PVUtil.getDouble(pvs[0])
+	_hemisphere = "L"
 
-if (_longitude < 0):
-	_hemisphere = "W"
+	if (_longitude < 0):
+		_hemisphere = "W"
 
-_degree = int(_longitude)
-_minutes_f = (_degree - _longitude) * 60
-_minutes = int (_minutes_f)
-_seconds = (_minutes_f - _minutes)*60
+	_degree = int(_longitude)
+	_minutes_f = (_degree - _longitude) * 60
+	_minutes = int (_minutes_f)
+	_seconds = (_minutes_f - _minutes)*60
 
-pvs[1].setValue("%io %2i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hemisphere))
+	pvs[1].setValue("%io %2i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hemisphere))
 
-	]]></scriptText>
+
+except Exception:
+
+	print "[GPS-NTP] Script 3 failed..."]]></scriptText>
       <pv trig="true">ca://Cnt:$(receiver_id):GPS:Longitude</pv>
       <pv trig="false">loc://longitude</pv>
     </path>
@@ -85,12 +100,19 @@ pvs[1].setValue("%io %2i ' %.3f '' %s" % (abs(_degree), _minutes, _seconds, _hem
 
 import datetime
 
-_months = ['Jan.', 'Feb.', "Mar.", "Apr.", "May", "June", "July", "Aug." , "Sept", "Oct." , "Nov.", "Dec."]
+try:
 
-_tx_time = PVUtil.getDouble(pvs[0])
-_server_date = datetime.datetime.fromtimestamp(_tx_time)
+	_months = ['Jan.', 'Feb.', "Mar.", "Apr.", "May", "June", "July", "Aug." , "Sept", "Oct." , "Nov.", "Dec."]
 
-pvs[1].setValue("%d / %s / %d %02d : %02d : %02d" % (_server_date.day, _months[_server_date.month - 1], _server_date.year, _server_date.hour, _server_date.minute,_server_date.second ))]]></scriptText>
+	_tx_time = PVUtil.getDouble(pvs[0])
+	_server_date = datetime.datetime.fromtimestamp(_tx_time)
+
+	pvs[1].setValue("%d / %s / %d %02d : %02d : %02d" % (_server_date.day, _months[_server_date.month - 1], _server_date.year, _server_date.hour, _server_date.minute,_server_date.second ))
+
+
+except Exception:
+
+	print "[GPS-NTP] Script 4 failed..."]]></scriptText>
       <pv trig="true">ca://Cnt:$(receiver_id):NTP:Timestamp</pv>
       <pv trig="false">loc://ntp_timestr</pv>
     </path>
@@ -100,12 +122,18 @@ pvs[1].setValue("%d / %s / %d %02d : %02d : %02d" % (_server_date.day, _months[_
 
 import datetime
 
-_months = ['Jan.', 'Feb.', "Mar.", "Apr.", "May", "June", "July", "Aug." , "Sept", "Oct." , "Nov.", "Dec."]
+try:
+	_months = ['Jan.', 'Feb.', "Mar.", "Apr.", "May", "June", "July", "Aug." , "Sept", "Oct." , "Nov.", "Dec."]
 
-_tx_time = PVUtil.getDouble(pvs[0])
-_server_date = datetime.datetime.fromtimestamp(_tx_time)
+	_tx_time = PVUtil.getDouble(pvs[0])
+	_server_date = datetime.datetime.fromtimestamp(_tx_time)
 
-pvs[1].setValue("%d / %s / %d %02d : %02d : %02d" % (_server_date.day, _months[_server_date.month - 1], _server_date.year, _server_date.hour, _server_date.minute,_server_date.second ))]]></scriptText>
+	pvs[1].setValue("%d / %s / %d %02d : %02d : %02d" % (_server_date.day, _months[_server_date.month - 1], _server_date.year, _server_date.hour, _server_date.minute,_server_date.second ))
+
+
+except Exception:
+
+	print "[GPS-NTP] Script 5 failed..."]]></scriptText>
       <pv trig="true">ca://Cnt:$(receiver_id):GPS:UTC:Timestamp</pv>
       <pv trig="false">loc://gps_timestr</pv>
     </path>
