@@ -22,4 +22,4 @@ The *python* implementation can be found in `PCASpy` folder and it is based on t
 2. Using with *Stream IOC*: run `./ioc_main` and start Stream IOC afterwards.
 3. `OPI` interfaces: open CSS and run Host-selection.opi. You will need to include or remove buttons and macros in `Host-selection.opi`, depending on how many servers are available.
 
-Refer to (this repository)[http://git.cnpem.br/gustavo.pinton/ntp-gps-building-scrips] in order to set everything up.
+Refer to [this repository](http://git.cnpem.br/gustavo.pinton/ntp-gps-building-scrips) in order to set everything up.
