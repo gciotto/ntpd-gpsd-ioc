@@ -1,0 +1,208 @@
+record(mbbi, "$(PREFIX):NTP:Leap") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(SCAN, "10 second")
+    field(ZRST, "No warning")
+    field(ONST, "+1")
+    field(TWST, "-1")
+    field(THST, "Unsynchronized")
+
+    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x00) $(PORT)")
+	
+
+    field(DTYP, "stream")
+    field(DESC, "Status flag indication leap second")
+}
+
+record(ai, "$(PREFIX):NTP:Stratum") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x01) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Stratum of reference source")
+}
+
+
+record(stringin, "$(PREFIX):NTP:Reference") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readString(0x02) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Reference of the source")
+}
+
+record(ai, "$(PREFIX):NTP:Offset") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 10 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x03) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Offset of source relative to the host")
+    field(LINR, "LINEAR")
+    field(EGU, "milliseconds")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:Jitter") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x04) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Jitter measure of the offset")
+    field(LINR, "LINEAR")
+    field(EGU, "milliseconds")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:Precision") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x05) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Clock precision")
+    field(LINR, "LINEAR")
+    field(EGU, "s")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "6")
+}
+
+record(stringin, "$(PREFIX):NTP:Address") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(INP, "@ntpd-gpsd.proto readString(0x6) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Host IP Address")
+}
+
+record(stringin, "$(PREFIX):NTP:Version") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+    field(INP, "@ntpd-gpsd.proto readString(0x7) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "NTP version")
+}
+
+record(ai, "$(PREFIX):NTP:Frequency") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x08) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Frequency offset")
+    field(EGU, "PPM")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:SysJitter") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x09) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Combined system jitter")
+    field(EGU, "ms")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:ClkWander") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x0a) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Clock frequency wander")
+    field(EGU, "PPM")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:ClkJitter") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readFLOAT(0x0b) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Clock jitter")
+    field(EGU, "ms")
+
+    # NTP best precision is in the order of microsseconds
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):NTP:Timestamp") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(SCAN, "1 second")
+
+    field(INP, "@ntpd-gpsd.proto readUINT_LONG(0x0c) $(PORT)")
+	
+    field(DTYP, "stream")
+    field(DESC, "Timestamp of the host")
+    field(EGU,  "seconds")
+
+}
+

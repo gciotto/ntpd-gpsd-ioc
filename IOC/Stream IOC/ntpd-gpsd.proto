@@ -1,0 +1,46 @@
+# ntpd-gpsd.proto (communication protocol for NT boards).
+
+# The BSMP protocol doesn't have any terminator character.
+
+Terminator = "";
+
+# An outcoming message should wait at most 10 s to be sent.
+
+LockTimeout = 1000;
+
+# The timeout involved in reading operations is of 25 ms (in practice, it indicates the end of
+# received message).
+
+ReadTimeout = 25;
+
+# The application should wait at most 100 ms for a board to answer.
+
+ReplyTimeout = 100;
+
+readUINT8_T {
+
+    out 0x10, 0x00, 0x01, $1;
+    in 0x11, 0x00, 0x01, "%r";
+}
+
+readUINT_LONG {
+
+    out 0x10, 0x00, 0x01, $1;
+    in 0x11, 0x00, 0x08, "%#08r";
+}
+
+readFLOAT {
+    out 0x10, 0x00, 0x01, $1;
+    in 0x11, 0x00, 0x04, "%#R";
+}
+
+readString {
+    out 0x10, 0x00, 0x01, $1; # requests offset variable (ID #2)
+    in 0x11, 0x00, "%*r", "%#s";
+}
+
+readReference {
+    out 0x10, 0x00, 0x01, 0x02; # requests offset variable (ID #2)
+    in 0x11, 0x00, "%*", "%s";
+}
+
