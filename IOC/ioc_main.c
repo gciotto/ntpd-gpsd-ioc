@@ -5,11 +5,10 @@
  *      Author: gciotto
  */
 
-#include "ioc_globals.h"
 #include "ntp_ioc.h"
 #include "gps_ioc.h"
+#include "ioc_globals.h"
 
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <pthread.h>
