@@ -78,8 +78,8 @@ void* poll_ntp_thread() {
 
 	while (!global_context->err_flag) {
 
-		u_short rstatus, max_rstatus = 0;
-		int max_rstatus_index = 0;
+		u_short rstatus = 0, max_rstatus = 0;
+		int max_rstatus_index = -1;
 		for (int w = 0; w < ntp_global_context->assoc_lenght; w++) {
 
 			ntpq_doquerylist(ntp_global_context->assocs[w].peer_varlist, 2,
@@ -93,6 +93,7 @@ void* poll_ntp_thread() {
 
 				max_rstatus = ntp_global_context->assocs[w].rstatus;
 				max_rstatus_index = w;
+				printf("rstatus:%d w:%d\n",  ntp_global_context->assocs[w].rstatus, w);
 			}
 
 		}
@@ -203,8 +204,8 @@ int ntp_register_bsmp_variables() {
 	}
 
 	uint8_t ntpq_var_size  = SIZE_OF_ARRAY(NTPQ_PEER_VARLIST),
-			sys_var_size = SIZE_OF_ARRAY(NTPQ_SYS_VARLIST),
-			other_var_size = SIZE_OF_ARRAY(OTHER_VARLIST);
+		sys_var_size = SIZE_OF_ARRAY(NTPQ_SYS_VARLIST),
+		other_var_size = SIZE_OF_ARRAY(OTHER_VARLIST);
 
 	int _i;
 	for (int i = 0; i < ntpq_var_size; i++){
@@ -277,11 +278,11 @@ int ntp_init () {
 	uint8_t assoc_number = ntpq_get_assocs();
 
 	ntp_global_context->assoc_lenght = assoc_number;
-	ntp_global_context->assocs = (struct association_info *) malloc(assoc_number * sizeof(struct association_info));
+	ntp_global_context->assocs = (struct association_info *) malloc (assoc_number * sizeof(struct association_info));
 
 	ntpq_read_associations(assocs_ids, assoc_number);
 	uint8_t ntpq_var_size  = SIZE_OF_ARRAY(NTPQ_PEER_VARLIST),
-			sys_var_size = SIZE_OF_ARRAY(NTPQ_SYS_VARLIST);
+		sys_var_size = SIZE_OF_ARRAY(NTPQ_SYS_VARLIST);
 
 	for (int w = 0; w < assoc_number; w++) {
 
@@ -290,6 +291,7 @@ int ntp_init () {
 
 		for (int i = 0; i < ntpq_var_size; i++){
 			ntp_global_context->assocs[w].peer_varlist[i].name = NTPQ_PEER_VARLIST[i]._libntqp_var.name;
+			ntp_global_context->assocs[w].peer_varlist[i].value = (char*) malloc (NTPQ_PEER_VARLIST[i]._bsmp_len);
 		}
 
 		ntp_global_context->assocs[w].peer_varlist[ntpq_var_size].name = 0;
@@ -300,6 +302,7 @@ int ntp_init () {
 
 	for (int w = 0; w < sys_var_size; w++) {
 		ntp_global_context->sys_varlist[w].name = NTPQ_SYS_VARLIST[w]._libntqp_var.name;
+		ntp_global_context->sys_varlist[2].value = (char*) malloc (NTPQ_SYS_VARLIST[w]._bsmp_len);
 	}
 
 	ntp_global_context->sys_varlist[sys_var_size].name = 0;
@@ -327,6 +330,7 @@ void ntp_create_threads() {
 		printf ("(pthread_create) %s\n", strerror(errno));
 		global_context->err_flag = errno;
 	}
+
 }
 
 void ntp_join_threads() {
