@@ -30,12 +30,14 @@ void gps_register_global_context(struct global_info* _global_pointer) {
 
 int gps_init () {
 
+	printf("GPS INIT\n");
+
 	gps_global_context = (struct gps_global_info *) malloc (sizeof(struct gps_global_info));
 
-	if (!gps_open(GPSD_SHARED_MEMORY, DEFAULT_GPSD_PORT, &gps_global_context->gpsdata)) {
+	if (gps_open(GPSD_SHARED_MEMORY, DEFAULT_GPSD_PORT, &gps_global_context->gpsdata)) {
 
 		global_context->err_flag = errno;
-		printf("%s", strerror(errno));
+		printf("GPS INIT FAILED%s", strerror(errno));
 		return errno;
 	}
 
@@ -71,6 +73,8 @@ int gps_register_bsmp_variables() {
 }
 
 void* poll_gps_thread (void* n) {
+
+	printf("Entrou GPS Thread\n");
 
 	while (!global_context->err_flag) {
 

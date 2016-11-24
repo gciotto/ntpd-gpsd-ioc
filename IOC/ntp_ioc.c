@@ -53,6 +53,8 @@ uint8_t OTHER_VARLIST[] = {
 
 void* poll_sys_thread() {
 
+
+
 	while (!global_context->err_flag) {
 
 		union timestamp_u _t;
@@ -66,7 +68,7 @@ void* poll_sys_thread() {
 
 		pthread_mutex_unlock(&global_context->var_mutex);
 
-		printf("%lu\n", _t.ts_as_ul);
+		printf("%lu %d\n", _t.ts_as_ul,  __SIZEOF_LONG__);
 
 		sleep(SYS_POLL_MIN);
 	}
