@@ -124,7 +124,7 @@ int main (int argc, char** argv) {
 	gps_register_global_context(&global_context);
 	gps_init();
 	gps_register_bsmp_variables();
-	//gps_create_threads();
+	gps_create_threads();
 
 	pthread_t unix_socket_mgmt_thread;
 	if (pthread_create(&unix_socket_mgmt_thread, NULL, unix_networking_thread, (void*) &global_context)) {
@@ -135,7 +135,7 @@ int main (int argc, char** argv) {
 	pthread_join(unix_socket_mgmt_thread, NULL);
 
 	ntp_join_threads();
-	// gps_join_threads();
+	gps_join_threads();
 
 	pthread_mutex_destroy(&global_context.var_mutex);
 
