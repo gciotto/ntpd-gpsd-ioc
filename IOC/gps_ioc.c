@@ -16,7 +16,7 @@ pthread_t gps_poll_thread;
 struct gps_var GPS_VARLIST [] = {
 		{FIX_MODE, 1},
 		{FIX_STATUS, 1},
-		{FIX_TIMESTAMP, __SIZEOF_DOUBLE__},
+		{FIX_TIMESTAMP, __SIZEOF_LONG__},
 		{LATITUDE, __SIZEOF_DOUBLE__},
 		{LONGITUDE, __SIZEOF_DOUBLE__},
 		{ALTITUDE, __SIZEOF_DOUBLE__},
@@ -34,11 +34,10 @@ int gps_init () {
 
 	gps_global_context = (struct gps_global_info *) malloc (sizeof(struct gps_global_info));
 
-	if (gps_open(GPSD_SHARED_MEMORY, DEFAULT_GPSD_PORT, &gps_global_context->gpsdata)) {
+	if ( (global_context->err_flag = gps_open("localhost", DEFAULT_GPSD_PORT, &gps_global_context->gpsdata))) {
 
-		global_context->err_flag = errno;
-		printf("GPS INIT FAILED%s", strerror(errno));
-		return errno;
+		printf("GPS INIT FAILED %s\n", gps_errstr(global_context->err_flag));
+		return global_context->err_flag;
 	}
 
 	gps_stream(&gps_global_context->gpsdata, WATCH_ENABLE, NULL);
@@ -96,11 +95,16 @@ void* poll_gps_thread (void* n) {
 				union double_u _d;
 				union int_u _i;
 
-				_d.double_as_double = gps_global_context->gpsdata.fix.time;
-				memcpy (global_context->bsmp_varlist[FIX_TIMESTAMP].data, _d.double_as_bytes, __SIZEOF_DOUBLE__);
+				union timestamp_u _t;
+		                _t.ts_as_ul = (unsigned long) gps_global_context->gpsdata.fix.time;
+				memcpy (global_context->bsmp_varlist[FIX_TIMESTAMP].data, _t.ts_as_bytes, __SIZEOF_LONG__);
+
+//				printf("Timestamp: %lu\n", _t.ts_as_ul);
 
 				_d.double_as_double = gps_global_context->gpsdata.fix.altitude;
 				memcpy (global_context->bsmp_varlist[ALTITUDE].data, _d.double_as_bytes, __SIZEOF_DOUBLE__);
+
+//				printf("Altitude: %f\n", _d.double_as_double);
 
 				_d.double_as_double = gps_global_context->gpsdata.fix.latitude;
 				memcpy (global_context->bsmp_varlist[LATITUDE].data, _d.double_as_bytes, __SIZEOF_DOUBLE__);
@@ -118,11 +122,14 @@ void* poll_gps_thread (void* n) {
 					memcpy(global_context->bsmp_varlist[SATTELITES_IN_USE].data + i *__SIZEOF_INT__, _i.int_as_bytes,
 							__SIZEOF_INT__);
 				}
+
+//				printf("Sattelites: %s\n", global_context->bsmp_varlist[SATTELITES_IN_USE].data);
+
 			}
 
 		}
 
-		sleep(GPSD_POLL_MIN);
+//		sleep(GPSD_POLL_MIN);
 	}
 
 	gps_stream(&gps_global_context->gpsdata, WATCH_DISABLE, NULL);
