@@ -1,11 +1,11 @@
-#!../bin/linux-x86_64/streamApp
+#!../bin/linux-arm/streamApp
 
 # Environment variables.
 
-epicsEnvSet("EPICS_BASE", "/home/gciotto/epics/base-3.14.12.5")
-epicsEnvSet("ASYN", "/home/gciotto/epics/asyn4-30")
-epicsEnvSet("TOP", "/home/gciotto/Downloads/stream-ioc")
-epicsEnvSet("ARCH", "linux-x86_64")
+epicsEnvSet("EPICS_BASE", "/root/base-3.14.12.5")
+epicsEnvSet("ASYN", "/root/asyn4-30")
+epicsEnvSet("TOP", "/root/stream-ioc")
+epicsEnvSet("ARCH", "linux-arm")
 epicsEnvSet ("STREAM_PROTOCOL_PATH", "$(TOP)/protocol")
 
 # Load database definition file.
