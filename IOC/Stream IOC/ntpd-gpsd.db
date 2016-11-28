@@ -206,3 +206,128 @@ record(ai, "$(PREFIX):NTP:Timestamp") {
 
 }
 
+record(mbbi, "$(PREFIX):GPS:Fix") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(SCAN, "10 second")
+    field(ZRST, "No fix")
+    field(ONST, "2D fix")
+    field(TWST, "3D fix")
+
+    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0d) $(PORT)")
+
+
+    field(DTYP, "stream")
+    field(DESC, "GPS receiver fix mode")
+}
+
+record(mbbi, "$(PREFIX):GPS:Fix:Status") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0e) $(PORT)")
+
+
+    field(DTYP, "stream")
+    field(DESC, "GPS receiver fix status")
+}
+
+record(ai, "$(PREFIX):GPS:Latitude") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readDOUBLE(0x10) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Latitude measured by the receiver")
+    field(LINR, "LINEAR")
+    field(EGU, "degrees")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):GPS:Longitude") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readDOUBLE(0x11) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Longitude measured by the receiver")
+    field(LINR, "LINEAR")
+    field(EGU, "degrees")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    field(PREC, "3")
+
+}
+
+record(ai, "$(PREFIX):GPS:Altitude") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readDOUBLE(0x12) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Altitude measured by the receiver")
+    field(LINR, "LINEAR")
+    field(EGU, "m")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+
+    field(PREC, "3")
+}
+
+record(ai, "$(PREFIX):GPS:Sattelites:Count") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+    field(SCAN, "10 second")
+
+    field(INP, "@ntpd-gpsd.proto readUINT_LONG(0x13) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Number of sattelites in use")
+    field(LINR, "LINEAR")
+
+    # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
+    field(ESLO, "1")
+    field(EOFF, "0.0")
+}
+
+#record(stringin, "$(PREFIX):GPS:Sattelites") {
+    # 'PINI = YES' enables this protocol to be handled by initialProcess()
+#    field(PINI, "YES")
+
+    # Poll period is defined to 16 seconds in ntp.conf
+#    field(SCAN, "10 second")
+
+#    field(INP, "@ntpd-gpsd.proto readString(0x14) $(PORT)")
+
+#    field(DTYP, "stream")
+#    field(DESC, "Sattelites in use currently")
+#}
+
+
