@@ -211,9 +211,11 @@ record(mbbi, "$(PREFIX):GPS:Fix") {
     field(PINI, "YES")
 
     field(SCAN, "10 second")
-    field(ZRST, "No fix")
-    field(ONST, "2D fix")
-    field(TWST, "3D fix")
+
+    field(ZRST, "Not seen")
+    field(ONST, "No fix")
+    field(TWST, "2D fix")
+    field(THST, "3D fix")
 
     field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0d) $(PORT)")
 
@@ -229,6 +231,10 @@ record(mbbi, "$(PREFIX):GPS:Fix:Status") {
     field(SCAN, "10 second")
 
     field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0e) $(PORT)")
+
+    field(ZRST, "No fix")
+    field(ONST, "Fix")
+    field(TWST, "DGPS fix")
 
 
     field(DTYP, "stream")
