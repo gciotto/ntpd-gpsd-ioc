@@ -8,6 +8,12 @@ record(mbbi, "$(PREFIX):NTP:Leap") {
     field(TWST, "-1")
     field(THST, "Unsynchronized")
 
+    # Alarms definition
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "MINOR")
+    field(TWSV, "MINOR")
+    field(THSV, "MAJOR")
+
     field(INP, "@ntpd-gpsd.proto readUINT8_T(0x00) $(PORT)")
 	
 
@@ -52,6 +58,16 @@ record(ai, "$(PREFIX):NTP:Offset") {
     field(DESC, "Offset of source relative to the host")
     field(LINR, "LINEAR")
     field(EGU, "milliseconds")
+
+    # Alarms definition
+    field(HIHI, 10.0)
+    field(HIGH, 1.0)
+    field(LOLO, -10.0)
+    field(LOW, -1.0)
+    field(HHSV, "MAJOR")
+    field(HSV, "MAJOR")
+    field(LLSV, "MAJOR")
+    field(LSV, "MAJOR")
 
     # Slope and offset are defined as 1 and 0, respectively. (No further changes are needed)
     field(ESLO, "1")
@@ -217,8 +233,13 @@ record(mbbi, "$(PREFIX):GPS:Fix") {
     field(TWST, "2D fix")
     field(THST, "3D fix")
 
-    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0d) $(PORT)")
+    # Alarms definition
+    field(ZRSV, "MAJOR")
+    field(ONSV, "MAJOR")
+    field(TWSV, "MINOR")
+    field(THSV, "NO_ALARM")
 
+    field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0d) $(PORT)")
 
     field(DTYP, "stream")
     field(DESC, "GPS receiver fix mode")
@@ -236,6 +257,10 @@ record(mbbi, "$(PREFIX):GPS:Fix:Status") {
     field(ONST, "Fix")
     field(TWST, "DGPS fix")
 
+    # Alarms definition
+    field(ZRSV, "MAJOR")
+    field(ONSV, "NO_ALARM")
+    field(TWSV, "NO_ALARM")
 
     field(DTYP, "stream")
     field(DESC, "GPS receiver fix status")
