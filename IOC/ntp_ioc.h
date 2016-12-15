@@ -17,7 +17,7 @@
 #include "ioc_globals.h"
 
 #define MAX_ASSOCS 5
-#define NTPQ_POLL_MIN 16
+#define NTPQ_POLL_MIN 4
 #define SYS_POLL_MIN 1
 #define MAX_REFID 15
 #define NTP_VERSION_LENGHT 7
