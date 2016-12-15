@@ -121,6 +121,8 @@ void* poll_gps_thread (void* n) {
 					_i.int_as_int = gps_global_context->gpsdata.used[i];
 					memcpy(global_context->bsmp_varlist[SATTELITES_IN_USE].data + i *__SIZEOF_INT__, _i.int_as_bytes,
 							__SIZEOF_INT__);
+
+					printf("Satellite no %d = %d\n", i, _i.int_as_int);
 				}
 
 //				printf("Sattelites: %s\n", global_context->bsmp_varlist[SATTELITES_IN_USE].data);
