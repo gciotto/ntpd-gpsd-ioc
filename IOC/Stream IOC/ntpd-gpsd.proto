@@ -17,6 +17,8 @@ ReadTimeout = 25;
 
 ReplyTimeout = 100;
 
+Separator = "";
+
 readUINT8_T {
 
     out 0x10, 0x00, 0x01, $1;
@@ -41,7 +43,7 @@ readDOUBLE {
 
 
 readString {
-    out 0x10, 0x00, 0x01, $1; # requests offset variable (ID #2)
+    out 0x10, 0x00, 0x01, $1;
     in 0x11, 0x00, "%*r", "%#s";
 }
 
@@ -50,3 +52,7 @@ readReference {
     in 0x11, 0x00, "%*", "%s";
 }
 
+readINT_array {
+    out 0x10, 0x00, 0x01, $1;
+    in 0x11, 0x00, "%*r", "%#04r";
+}

@@ -2,7 +2,7 @@ record(mbbi, "$(PREFIX):NTP:Leap") {
     # 'PINI = YES' enables this protocol to be handled by initialProcess()
     field(PINI, "YES")
 
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
     field(ZRST, "No warning")
     field(ONST, "+1")
     field(TWST, "-1")
@@ -37,7 +37,7 @@ record(stringin, "$(PREFIX):NTP:Reference") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readString(0x02) $(PORT)")
 	
@@ -49,8 +49,8 @@ record(ai, "$(PREFIX):NTP:Offset") {
     # 'PINI = YES' enables this protocol to be handled by initialProcess()
     field(PINI, "YES")
 
-    # Poll period is defined to 10 seconds in ntp.conf
-    field(SCAN, "10 second")
+    # Poll period is defined to 1 second
+    field(SCAN, "1 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x03) $(PORT)")
 	
@@ -82,7 +82,7 @@ record(ai, "$(PREFIX):NTP:Jitter") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x04) $(PORT)")
 	
@@ -104,7 +104,7 @@ record(ai, "$(PREFIX):NTP:Precision") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x05) $(PORT)")
 	
@@ -145,7 +145,7 @@ record(ai, "$(PREFIX):NTP:Frequency") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x08) $(PORT)")
 	
@@ -162,7 +162,7 @@ record(ai, "$(PREFIX):NTP:SysJitter") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x09) $(PORT)")
 	
@@ -179,7 +179,7 @@ record(ai, "$(PREFIX):NTP:ClkWander") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x0a) $(PORT)")
 	
@@ -196,7 +196,7 @@ record(ai, "$(PREFIX):NTP:ClkJitter") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readFLOAT(0x0b) $(PORT)")
 	
@@ -226,7 +226,7 @@ record(mbbi, "$(PREFIX):GPS:Fix") {
     # 'PINI = YES' enables this protocol to be handled by initialProcess()
     field(PINI, "YES")
 
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(ZRST, "Not seen")
     field(ONST, "No fix")
@@ -249,7 +249,7 @@ record(mbbi, "$(PREFIX):GPS:Fix:Status") {
     # 'PINI = YES' enables this protocol to be handled by initialProcess()
     field(PINI, "YES")
 
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readUINT8_T(0x0e) $(PORT)")
 
@@ -335,7 +335,7 @@ record(ai, "$(PREFIX):GPS:Sattelites:Count") {
     field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-    field(SCAN, "10 second")
+    field(SCAN, "5 second")
 
     field(INP, "@ntpd-gpsd.proto readUINT_LONG(0x13) $(PORT)")
 
@@ -348,17 +348,20 @@ record(ai, "$(PREFIX):GPS:Sattelites:Count") {
     field(EOFF, "0.0")
 }
 
-#record(stringin, "$(PREFIX):GPS:Sattelites") {
+record(waveform, "$(PREFIX):GPS:Sattelites") {
     # 'PINI = YES' enables this protocol to be handled by initialProcess()
-#    field(PINI, "YES")
+    field(PINI, "YES")
 
     # Poll period is defined to 16 seconds in ntp.conf
-#    field(SCAN, "10 second")
+    field(SCAN, "5 second")
+    field(FTVL, "SHORT")
 
-#    field(INP, "@ntpd-gpsd.proto readString(0x14) $(PORT)")
+    field(NELM, "72")
 
-#    field(DTYP, "stream")
-#    field(DESC, "Sattelites in use currently")
-#}
+    field(INP, "@ntpd-gpsd.proto readINT_array(0x14) $(PORT)")
+
+    field(DTYP, "stream")
+    field(DESC, "Sattelites in use currently")
+}
 
 
