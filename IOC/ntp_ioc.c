@@ -47,12 +47,29 @@ struct ntpq_var NTPQ_SYS_VARLIST[] = {
 		{{ "clk_jitter", 0 }, __SIZEOF_FLOAT__},
 };
 
+
 uint8_t OTHER_VARLIST[] = {
 		__SIZEOF_LONG__ 	/* Timestamp @ host */
 };
 
-void* poll_sys_thread() {
+void restart_ntp_daemon() {
 
+	/* close connection with the daemon */
+	ntpq_closehost();
+
+	system("systemctl restart ntpd");
+
+	/* re-establish connection */
+	if (!ntpq_openhost("localhost", AF_INET)) {
+
+		global_context->err_flag = errno;
+
+		printf("Could not re-establish connection with NTPD.\n");
+		return -1;
+	}
+}
+
+void* poll_sys_thread() {
 
 
 	while (!global_context->err_flag) {
@@ -123,6 +140,11 @@ void* poll_ntp_thread() {
 
 			switch (_j) {
 			case LEAP:
+				uint8_t _leap = (uint8_t) atoi (value);
+				if (_leap == 1 || _leap == 2) {
+					ntp_global_context->leap_steps = LEAP_MAX_STEPS_RECOVERY;
+					ntp_global_context->leap_flag = 1;
+				}
 			case STRATUM:
 				global_context->bsmp_varlist[_j].data[0] = (uint8_t) atoi (value);
 				break;
@@ -131,6 +153,16 @@ void* poll_ntp_thread() {
 				memcpy(global_context->bsmp_varlist[_j].data, _f.float_as_bytes, __SIZEOF_FLOAT__);
 				break;
 			case OFFSET:
+				if (ntp_global_context->leap_flag) {
+					float _offset = atof(value);
+					ntp_global_context->leap_steps--;
+					if (_offset > 10 && !ntp_global_context->leap_steps){
+						restart_ntp_daemon();
+						ntp_global_context->leap_steps = LEAP_MAX_STEPS_RECOVERY;
+						ntp_global_context->leap_flag = 0;
+					}
+				}
+
 			case JITTER:
 				_f.float_as_float = atof(value);
 				memcpy(global_context->bsmp_varlist[_j].data, _f.float_as_bytes, __SIZEOF_FLOAT__);
@@ -278,6 +310,8 @@ int ntp_init () {
 	u_short assocs_ids[MAX_ASSOCS];
 
 	uint8_t assoc_number = ntpq_get_assocs();
+
+	ntp_global_context->leap_flag = 0;
 
 	ntp_global_context->assoc_lenght = assoc_number;
 	ntp_global_context->assocs = (struct association_info *) malloc (assoc_number * sizeof(struct association_info));

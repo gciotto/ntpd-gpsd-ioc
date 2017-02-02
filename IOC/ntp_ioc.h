@@ -21,6 +21,7 @@
 #define SYS_POLL_MIN 1
 #define MAX_REFID 15
 #define NTP_VERSION_LENGHT 7
+#define LEAP_MAX_STEPS_RECOVERY 10
 
 struct association_info {
 	u_short assod_id;
@@ -33,7 +34,7 @@ struct association_info {
 struct ntp_global_info {
 	struct association_info *assocs;
 	struct ntpq_varlist *sys_varlist;
-	uint8_t assoc_lenght;
+	uint8_t assoc_lenght, leap_steps, leap_flag;
 };
 
 struct ntpq_var {
