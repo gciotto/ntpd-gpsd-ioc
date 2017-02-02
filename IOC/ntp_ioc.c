@@ -65,7 +65,6 @@ void restart_ntp_daemon() {
 		global_context->err_flag = errno;
 
 		printf("Could not re-establish connection with NTPD.\n");
-		return -1;
 	}
 }
 
@@ -138,9 +137,11 @@ void* poll_ntp_thread() {
 
 			pthread_mutex_lock(&global_context->var_mutex);
 
+			uint8_t _leap;
+
 			switch (_j) {
 			case LEAP:
-				uint8_t _leap = (uint8_t) atoi (value);
+				_leap = (uint8_t) atoi (value);
 				if (_leap == 1 || _leap == 2) {
 					ntp_global_context->leap_steps = LEAP_MAX_STEPS_RECOVERY;
 					ntp_global_context->leap_flag = 1;
