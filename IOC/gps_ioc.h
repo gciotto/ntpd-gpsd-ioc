@@ -1,8 +1,8 @@
 /*
- * gps_ioc.h
+ * Header file for GPSD polling threads.
  *
- *  Created on: 21 de out de 2016
- *      Author: gciotto
+ * Created on: 21 de out de 2016
+ * Author: Gustavo Ciotto Pinton
  */
 
 #ifndef GPS_IOC_H_
