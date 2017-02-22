@@ -13,6 +13,7 @@ struct global_info* global_context;
 struct gps_global_info *gps_global_context;
 pthread_t gps_poll_thread;
 
+/* Variables list provided by GPSD  */
 struct gps_var GPS_VARLIST [] = {
 		{FIX_MODE, 1},
 		{FIX_STATUS, 1},
@@ -40,12 +41,14 @@ int gps_init () {
 		return global_context->err_flag;
 	}
 
+	/* Initializes communication with GPSD */
 	gps_stream(&gps_global_context->gpsdata, WATCH_ENABLE, NULL);
 
 	return 0;
 
 }
 
+/* Registers GPSD variables in the BSMP server */
 int gps_register_bsmp_variables() {
 
 	if (!global_context) {
@@ -73,8 +76,6 @@ int gps_register_bsmp_variables() {
 
 void* poll_gps_thread (void* n) {
 
-	printf("Entrou GPS Thread\n");
-
 	while (!global_context->err_flag) {
 
 		if (!gps_waiting(&gps_global_context->gpsdata, GPS_MAX_WAITING_TIME)) {
@@ -84,10 +85,12 @@ void* poll_gps_thread (void* n) {
 
 		else {
 
+			/* Reads retrieved GPS data */
 			gps_read(&gps_global_context->gpsdata);
 
 			global_context->bsmp_varlist[FIX_STATUS].data[0] = (uint8_t) gps_global_context->gpsdata.status;
 
+			/* Updates all variables */
 			if (gps_global_context->gpsdata.status) {
 
 				global_context->bsmp_varlist[FIX_MODE].data[0] = (uint8_t) gps_global_context->gpsdata.fix.mode;
@@ -99,12 +102,8 @@ void* poll_gps_thread (void* n) {
 		                _t.ts_as_ul = (unsigned long) gps_global_context->gpsdata.fix.time;
 				memcpy (global_context->bsmp_varlist[FIX_TIMESTAMP].data, _t.ts_as_bytes, __SIZEOF_LONG__);
 
-//				printf("Timestamp: %lu\n", _t.ts_as_ul);
-
 				_d.double_as_double = gps_global_context->gpsdata.fix.altitude;
 				memcpy (global_context->bsmp_varlist[ALTITUDE].data, _d.double_as_bytes, __SIZEOF_DOUBLE__);
-
-//				printf("Altitude: %f\n", _d.double_as_double);
 
 				_d.double_as_double = gps_global_context->gpsdata.fix.latitude;
 				memcpy (global_context->bsmp_varlist[LATITUDE].data, _d.double_as_bytes, __SIZEOF_DOUBLE__);
@@ -124,14 +123,9 @@ void* poll_gps_thread (void* n) {
 
 					printf("Satellite no %d = %d\n", i, _i.int_as_int);
 				}
-
-//				printf("Sattelites: %s\n", global_context->bsmp_varlist[SATTELITES_IN_USE].data);
-
 			}
 
 		}
-
-//		sleep(GPSD_POLL_MIN);
 	}
 
 	gps_stream(&gps_global_context->gpsdata, WATCH_DISABLE, NULL);
